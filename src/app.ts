@@ -3,6 +3,12 @@ import express from "express";
 import "express-async-errors";
 import { json } from "stream/consumers";
 import prisma from "./lib/prisma/client";
+import { 
+    validate,
+    validationErrorMiddleware,
+    iphonesSchema, 
+    IphonesData
+} from "./lib/prisma/validation";
 
 
 //creiamo una istanza di express assegnando l'esecuzione ad "app"
@@ -18,10 +24,12 @@ app.get("/iphones", async (request, response) => {
 });
 
 //inviamo al server i nostri dati con una chiamata di tipo POST
-app.post("/iphones", async (request, response) => {
-    const phone = request.body;
+app.post("/iphones", validate({ body: iphonesSchema}), async (request, response) => {
+    const phone: IphonesData = request.body;
 
     response.status(201).json(phone);
 });
+
+app.use(validationErrorMiddleware);
 
 export default app;
