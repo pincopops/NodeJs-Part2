@@ -17,11 +17,4 @@ app.get("/iphones", async (request, response) => {
     response.json(iphones);
 });
 
-//inviamo al server i nostri dati con una chiamata di tipo POST
-app.post("/iphones", async (request, response) => {
-    const phone = request.body;
-
-    response.status(201).json(phone);
-});
-
 export default app;
