@@ -37,3 +37,22 @@ test("GET /planets", async () => {
 
     expect(response.body).toEqual(phones);
 });
+
+
+
+test("POST /planets", async () => {
+    const phone = {
+            name: "iPhone 13",
+            description: null,
+            lenght: 123,
+            width: 123,
+        };
+
+    const response = await request
+        .post("/iphones")
+        .send(phone)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+    expect(response.body).toEqual(phone);
+});
