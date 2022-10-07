@@ -4,10 +4,10 @@ import "express-async-errors";
 import { nextTick } from "process";
 import { json } from "stream/consumers";
 import prisma from "./lib/prisma/client";
-import { 
+import {
     validate,
     validationErrorMiddleware,
-    iphonesSchema, 
+    iphonesSchema,
     IphonesData
 } from "./lib/prisma/validation";
 
@@ -26,12 +26,12 @@ app.get("/iphones", async (request, response) => {
 
 app.get("/iphones/:id(\\d+)", async (request, response, next) => {
     const iphoneId = Number(request.params.id);
-    
+
     const iphone = await prisma.phones.findUnique({
-        where: {id: iphoneId}
+        where: { id: iphoneId }
     });
 
-    if(!iphone) {
+    if (!iphone) {
         response.status(404);
         return next(`Cannot get /planets/${iphoneId}`);
     }
@@ -40,7 +40,7 @@ app.get("/iphones/:id(\\d+)", async (request, response, next) => {
 });
 
 //inviamo al server i nostri dati con una chiamata di tipo POST
-app.post("/iphones", validate({ body: iphonesSchema}), async (request, response) => {
+app.post("/iphones", validate({ body: iphonesSchema }), async (request, response) => {
     const phoneData: IphonesData = request.body;
 
     const phone = await prisma.phones.create({
@@ -48,6 +48,25 @@ app.post("/iphones", validate({ body: iphonesSchema}), async (request, response)
     })
 
     response.status(201).json(phone);
+});
+
+app.put("/iphones/:id(\\d+)", validate({ body: iphonesSchema }), async (request, response, next) => {
+    const phoneId = Number(request.params.id)
+    const phoneData: IphonesData = request.body;
+
+    try {
+        const phone = await prisma.phones.update({
+            where: { id: phoneId },
+            data: phoneData,
+        })
+
+        response.status(200).json(phone);
+
+    } catch(error){
+        response.status(404);
+        next(`Cannot PUT /phones/${phoneId}`)
+    }
+
 });
 
 app.use(validationErrorMiddleware);

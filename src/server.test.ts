@@ -137,3 +137,94 @@ describe("POST /iphones", () => {
         });
     });
 })
+
+
+describe("PUT /iphones/:id", () => {
+    test("Valid request", async () => {
+
+        const phone = {
+
+            id: 3,
+            name: "iPhone 17",
+            description: "Our most powerfull iPhone, as every year",
+            lenght: 123,
+            width: 123,
+            createdAt: "2022-10-07T08:38:54.022Z",
+            updatedAt: "2022-10-07T08:38:54.022Z"
+
+        };
+
+        //@ts-ignore
+        prismaMock.phone.update.mockResolvedValue(phone)
+
+        const response = await request
+            .put("/iphones/3")
+            .send({
+                name: "iPhone 13",
+                description: "Our most powerfull iPhone, as every year",
+                lenght: 123,
+                width: 123,
+            })
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
+
+        expect(response.body).toEqual(phone);
+    });
+
+    test("Invalid request", async () => {
+        const phone = {
+            description: null,
+            lenght: 123,
+            width: 123,
+        };
+
+        const response = await request
+            .put("/iphone/23")
+            .send(phone)
+            .expect(422)
+            .expect("Content-Type", /application\/json/);
+
+        expect(response.body).toEqual({
+            errors: {
+                body: expect.any(Array)
+            }
+        });
+    });
+
+    test("iPhone does not exist", async () => {
+        //@ts-ignore
+        prismaMock.phone.update.mockRejectedValue(new Error("Error"));
+
+        const response = await request
+            .put("/phones/23")
+            .send(
+                {
+                    name: "iPhone 13",
+                    description: "Our most powerfull iPhone, as every year",
+                    lenght: 123,
+                    width: 123,
+                }
+            )
+            .expect(404)
+            .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot PUT /planets/23");
+    });
+
+    test("Invalid iPhone id", async () => {
+
+        const response = await request
+            .put("/phones/asdf")
+            .send({
+
+                name: "iPhone 13",
+                description: "Our most powerfull iPhone, as every year",
+                lenght: 123,
+                width: 123,
+            })
+            .expect(404)
+            .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot PUT /planets/asdf");
+    });
+})
