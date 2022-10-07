@@ -1,6 +1,7 @@
 //importiamo la libreria express che serve per far funzionare il server
 import express from "express";
 import "express-async-errors";
+import { nextTick } from "process";
 import { json } from "stream/consumers";
 import prisma from "./lib/prisma/client";
 import { 
@@ -21,6 +22,21 @@ app.get("/iphones", async (request, response) => {
     const iphones = await prisma.phones.findMany();
 
     response.json(iphones);
+});
+
+app.get("/iphones/:id(\\d+)", async (request, response, next) => {
+    const iphoneId = Number(request.params.id);
+    
+    const iphone = await prisma.phones.findUnique({
+        where: {id: iphoneId}
+    });
+
+    if(!iphone) {
+        response.status(404);
+        return next(`Cannot get /planets/${iphoneId}`);
+    }
+
+    response.json(iphone);
 });
 
 //inviamo al server i nostri dati con una chiamata di tipo POST

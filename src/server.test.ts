@@ -39,6 +39,52 @@ describe("GET /iphones", () => {
     });
 });
 
+describe("GET /iphone/:id", () => {
+    test("Valid request", async () => {
+        const phone = {
+            id: 1,
+            name: "iPhone 13",
+            description: null,
+            lenght: 123,
+            width: 123,
+            createdAt: "2022-09-30T13:55:36.403Z",
+            updatedAt: "2022-09-30T13:55:24.121Z"
+        };
+
+        //@ts-ignore
+        prismaMock.phone.findUnique.mockResolvedValue(phone)
+
+        const response = await request
+            .get("/iphones/1")
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
+
+        expect(response.body).toEqual(phone);
+    });
+
+    test("iPhone does not exist", async () => {
+        //@ts-ignore
+        prismaMock.phone.findUnique.mockResolvedValue(null)
+
+        const response = await request
+            .get("/phones/23")
+            .expect(404)
+            .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot get /planets/23");
+    });
+
+    test("Invalid iPhone id", async () => {
+
+        const response = await request
+            .get("/phones/asdf")
+            .expect(404)
+            .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot get /planets/asdf");
+    });
+});
+
 describe("POST /iphones", () => {
     test("Valid request", async () => {
 
