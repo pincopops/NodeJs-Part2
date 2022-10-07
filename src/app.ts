@@ -25,7 +25,11 @@ app.get("/iphones", async (request, response) => {
 
 //inviamo al server i nostri dati con una chiamata di tipo POST
 app.post("/iphones", validate({ body: iphonesSchema}), async (request, response) => {
-    const phone: IphonesData = request.body;
+    const phoneData: IphonesData = request.body;
+
+    const phone = await prisma.phones.create({
+        data: phoneData,
+    })
 
     response.status(201).json(phone);
 });

@@ -39,41 +39,55 @@ describe("GET /iphones", () => {
     });
 });
 
-    describe("POST /iphones", () => {
-        test("Valid request", async () => {
-            const phone = {
+describe("POST /iphones", () => {
+    test("Valid request", async () => {
+
+        const phone = {
+
+            id: 3,
+            name: "iPhone 17",
+            description: null,
+            lenght: 123,
+            width: 123,
+            createdAt: "2022-10-07T08:38:54.022Z",
+            updatedAt: "2022-10-07T08:38:54.022Z"
+
+        };
+
+        //@ts-ignore
+        prismaMock.phone.create.mockResolvedValue(phone)
+
+        const response = await request
+            .post("/iphones")
+            .send({
                 name: "iPhone 13",
                 description: null,
                 lenght: 123,
                 width: 123,
-            };
+            })
+            .expect(201)
+            .expect("Content-Type", /application\/json/);
 
-            const response = await request
-                .post("/iphones")
-                .send(phone)
-                .expect(201)
-                .expect("Content-Type", /application\/json/);
+        expect(response.body).toEqual(phone);
+    });
 
-            expect(response.body).toEqual(phone);
+    test("Invalid request", async () => {
+        const phone = {
+            description: null,
+            lenght: 123,
+            width: 123,
+        };
+
+        const response = await request
+            .post("/iphones")
+            .send(phone)
+            .expect(422)
+            .expect("Content-Type", /application\/json/);
+
+        expect(response.body).toEqual({
+            errors: {
+                body: expect.any(Array)
+            }
         });
-
-        test("Invalid request", async () => {
-            const phone = {
-                description: null,
-                lenght: 123,
-                width: 123,
-            };
-
-            const response = await request
-                .post("/iphones")
-                .send(phone)
-                .expect(422)
-                .expect("Content-Type", /application\/json/);
-
-            expect(response.body).toEqual({
-                errors: {
-                    body: expect.any(Array)
-                }
-            });
-        });
-    })
+    });
+})
