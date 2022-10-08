@@ -33,7 +33,8 @@ describe("GET /iphones", () => {
         const response = await request
             .get("/iphones")
             .expect(200)
-            .expect("Content-Type", /application\/json/);
+            .expect("Content-Type", /application\/json/)
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
 
         expect(response.body).toEqual(phones);
     });
@@ -112,7 +113,9 @@ describe("POST /iphones", () => {
                 width: 123,
             })
             .expect(201)
-            .expect("Content-Type", /application\/json/);
+            .expect("Content-Type", /application\/json/)
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
+
 
         expect(response.body).toEqual(phone);
     });
@@ -166,7 +169,8 @@ describe("PUT /iphones/:id", () => {
                 width: 123,
             })
             .expect(200)
-            .expect("Content-Type", /application\/json/);
+            .expect("Content-Type", /application\/json/)
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
 
         expect(response.body).toEqual(phone);
     });
@@ -235,6 +239,7 @@ describe("DELETE /iphone/:id", () => {
         const response = await request
             .delete("/iphones/1")
             .expect(204)
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
 
         expect(response.text).toEqual("");
     });
