@@ -1,0 +1,17 @@
+<html>
+
+<body>
+    <script>
+        async function fetchiPhones() {
+            const response = await fetch("http://localhost:3000/iphones");
+            const phones = await response.json();
+
+            console.log({ phones });
+        }
+
+
+        fetchiPhones();
+    </script>
+</body>
+
+</html>
