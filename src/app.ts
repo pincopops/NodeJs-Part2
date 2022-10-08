@@ -69,6 +69,23 @@ app.put("/iphones/:id(\\d+)", validate({ body: iphonesSchema }), async (request,
 
 });
 
+app.delete("/iphones/:id(\\d+)", async (request, response, next) => {
+    const phoneId = Number(request.params.id);
+
+    try {
+        await prisma.phones.delete({
+            where: { id: phoneId },
+        });
+
+        response.status(204).end;
+
+    } catch(error){
+        response.status(404);
+        next(`Cannot DELETE /phones/${phoneId}`);
+    }
+
+});
+
 app.use(validationErrorMiddleware);
 
 export default app;

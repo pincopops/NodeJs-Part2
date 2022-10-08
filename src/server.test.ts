@@ -228,3 +228,36 @@ describe("PUT /iphones/:id", () => {
         expect(response.text).toContain("Cannot PUT /planets/asdf");
     });
 })
+
+describe("DELETE /iphone/:id", () => {
+    test("Valid request", async () => {
+
+        const response = await request
+            .delete("/iphones/1")
+            .expect(204)
+
+        expect(response.text).toEqual("");
+    });
+
+    test("iPhone does not exist", async () => {
+        //@ts-ignore
+        prismaMock.phone.delete.mockRejectedValue(new Error("Error"));
+
+        const response = await request
+            .delete("/phones/23")
+            .expect(404)
+            .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot DELETE /planets/23");
+    });
+
+    test("Invalid iPhone id", async () => {
+
+        const response = await request
+            .delete("/phones/asdf")
+            .expect(404)
+            .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot DELETE /planets/asdf");
+    });
+});
