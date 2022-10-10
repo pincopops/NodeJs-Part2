@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+    <body>
+        <form action="http://localhost:3000/iphones" id="form-add">
+            <label>
+                <strong>Name:</strong>
+                <input type="text" name="name">
+            </label>
+
+            <label>
+                <strong>Width:</strong>
+                <input type="number" name="width">
+            </label>
+
+            <label>
+                <strong>Height:</strong>
+                <input type="number" name="height">
+            </label>
+
+            <input type="submit" value="Add iPhone">
+        </form>
+
+        <script>
+            async function addIphone(event) {
+                event.preventDefault();
+
+                const form = event.currentTarget;
+
+                const formData = new FormData(form);
+                const plainFormData = Object.fromEntries(formData.entries());
+                const formDataJsonString = JSON.stringify(plainFormData);
+
+                const url = form.action;
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: formDataJsonString,
+                })
+                const iphone = await response.json();
+                console.dir(iphone);
+            }
+
+            const addForm = document.getElementById("form-add");
+
+            addForm.addEventListener("submit", addIphone)
+        </script>
+    </body>
+</html >
