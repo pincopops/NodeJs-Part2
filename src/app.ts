@@ -104,10 +104,24 @@ app.post("/iphones/:id(\\d+)/photo",
             response.status(400);
             return next("No photo file uploaded.");
         }
+        
+        const phoneId = Number(request.params.id);
         const photoFileName = request.file.filename;
-
-        response.status(201).json({ photoFileName });
+        
+        try{
+            await prisma.phones.update({
+                where: { id: phoneId },
+                data: { photoFileName },
+            });
+        } catch(error) {
+            response.status(404)
+            next(`Cannot POST /phones/${phoneId}/photo`)
+        }
+        
+        
     });
+
+app.use("/iphones/photos", express.static("uploads"));
 
 app.use(validationErrorMiddleware);
 

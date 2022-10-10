@@ -280,6 +280,19 @@ describe("POST /iphones/:id/photo", () => {
 
     });
 
+    test("Phone does not exist", async () => {
+        //@ts-ignore
+        prismaMock.phones.update.mockRejectedValue(new Error("Error"));
+
+        const response = await request 
+        .post("iphones/23/photo")
+        .attach("photo", "test-fixtures/photos/file.png")
+        .expect(404)
+        .expect("Content-Type", /text\/html'/);
+
+    expect(response.text).toContain("Cannot POST /iphones/23/photo")
+    });
+
     test("Invalid iphone id", async () => {
         const response = await request
             .post("/iphones/asdf/photo")
