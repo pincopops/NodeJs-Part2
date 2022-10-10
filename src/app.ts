@@ -11,6 +11,9 @@ import {
     iphonesSchema,
     IphonesData
 } from "./lib/prisma/validation";
+import { initMulterMiddleware } from "./lib/prisma/middleware/multer";
+
+const upload = initMulterMiddleware();
 
 const corsOptions = {
     origin: "http://localhost:8080"
@@ -68,7 +71,7 @@ app.put("/iphones/:id(\\d+)", validate({ body: iphonesSchema }), async (request,
 
         response.status(200).json(phone);
 
-    } catch(error){
+    } catch (error) {
         response.status(404);
         next(`Cannot PUT /phones/${phoneId}`)
     }
@@ -85,12 +88,26 @@ app.delete("/iphones/:id(\\d+)", async (request, response, next) => {
 
         response.status(204).end;
 
-    } catch(error){
+    } catch (error) {
         response.status(404);
         next(`Cannot DELETE /phones/${phoneId}`);
     }
 
 });
+
+app.post("/iphones/:id(\\d+)/photo",
+    upload.single("photo"),
+    async (request, response, next) => {
+        console.log("request.file", request.file);
+
+        if (!request.file) {
+            response.status(400);
+            return next("No photo file uploaded.");
+        }
+        const photoFileName = request.file.filename;
+
+        response.status(201).json({ photoFileName });
+    });
 
 app.use(validationErrorMiddleware);
 

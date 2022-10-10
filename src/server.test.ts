@@ -266,3 +266,21 @@ describe("DELETE /iphone/:id", () => {
         expect(response.text).toContain("Cannot DELETE /planets/asdf");
     });
 });
+
+describe("POST /iphones/:id/photo", () => {
+    test("Invalid iphone id", async () => {
+        const response = await request
+            .post("/iphones/asdf/photo")
+            .expect(404)
+            .expect("Content Type", /text\/html/);
+        expect(response.text).toContain("Cannot POST /")
+    });
+
+    test("Invalid request with no file upload", async () => {
+        const response = await request
+            .post("/iphones/23/photo")
+            .expect(400)
+            .expect("Content Type", /text\/html/);
+        expect(response.text).toContain("No photo file uploaded.")
+    });
+});
