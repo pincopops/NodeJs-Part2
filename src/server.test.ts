@@ -295,4 +295,5 @@ describe("POST /iphones/:id/photo", () => {
             .expect("Content Type", /text\/html/);
         expect(response.text).toContain("No photo file uploaded.")
     });
+    
 });
