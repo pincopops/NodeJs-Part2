@@ -39,9 +39,15 @@ router.get("/:id(\\d+)", async (request, response, next) => {
 //inviamo al server i nostri dati con una chiamata di tipo POST
 router.post("/", checkAuthorization, validate({ body: iphonesSchema }), async (request, response) => {
     const phoneData: IphonesData = request.body;
+    const username = request.user?.username as string;
 
     const phone = await prisma.phones.create({
-        data: phoneData,
+        data: {
+            ...phoneData,
+            //@ts-ignore
+            createdBy: username,
+            updatedBy: username,
+        }
     });
 
     response.status(201).json(phone);
@@ -50,11 +56,17 @@ router.post("/", checkAuthorization, validate({ body: iphonesSchema }), async (r
 router.put("/:id(\\d+)", checkAuthorization, validate({ body: iphonesSchema }), async (request, response, next) => {
     const phoneId = Number(request.params.id)
     const phoneData: IphonesData = request.body;
+    const username = request.user?.username as string;
 
     try {
         const phone = await prisma.phones.update({
             where: { id: phoneId },
-            data: phoneData,
+            data: {
+                ...phoneData,
+                //@ts-ignore
+                updatedBy: username,
+
+            }
         })
 
         response.status(200).json(phone);
