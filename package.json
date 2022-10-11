@@ -49,6 +49,7 @@
     "@prisma/client": "^4.4.0",
     "@sinclair/typebox": "^0.24.44",
     "ajv-formats": "^2.1.1",
+    "cli-color": "^2.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
