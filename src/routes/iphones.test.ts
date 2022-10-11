@@ -1,7 +1,6 @@
-import { application, response } from "express";
 import supertest from "supertest";
-import app from "./app";
-import { prismaMock } from "./lib/prisma/client.mock";
+import { prismaMock } from "../lib/prisma/client.mock";
+import app from "../app";
 
 const request = supertest(app);
 describe("GET /iphones", () => {
