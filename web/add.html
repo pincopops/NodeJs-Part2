@@ -2,6 +2,9 @@
 <html>
 
     <body>
+        <p>
+            <a href="http://localhost:3000/auth/login?redirectTo=">LOGIN</a>
+        </p>
         <form action="http://localhost:3000/iphones" id="form-add">
             <label>
                 <strong>Name:</strong>
@@ -39,7 +42,9 @@
                         "Content-Type": "application/json"
                     },
                     body: formDataJsonString,
-                })
+                    credentials: "include",
+                });
+
                 const iphone = await response.json();
                 console.dir(iphone);
             }

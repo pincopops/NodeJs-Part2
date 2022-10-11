@@ -7,6 +7,7 @@ import {
     IphonesData
 } from "../lib/prisma/middleware/validation";
 
+import { checkAuthorization } from "../lib/prisma/middleware/passport";
 import { initMulterMiddleware } from "../lib/prisma/middleware/multer";
 
 const upload = initMulterMiddleware();
@@ -36,17 +37,17 @@ router.get("/:id(\\d+)", async (request, response, next) => {
 });
 
 //inviamo al server i nostri dati con una chiamata di tipo POST
-router.post("/", validate({ body: iphonesSchema }), async (request, response) => {
+router.post("/", checkAuthorization, validate({ body: iphonesSchema }), async (request, response) => {
     const phoneData: IphonesData = request.body;
 
     const phone = await prisma.phones.create({
         data: phoneData,
-    })
+    });
 
     response.status(201).json(phone);
 });
 
-router.put("/:id(\\d+)", validate({ body: iphonesSchema }), async (request, response, next) => {
+router.put("/:id(\\d+)", checkAuthorization, validate({ body: iphonesSchema }), async (request, response, next) => {
     const phoneId = Number(request.params.id)
     const phoneData: IphonesData = request.body;
 
@@ -65,7 +66,7 @@ router.put("/:id(\\d+)", validate({ body: iphonesSchema }), async (request, resp
 
 });
 
-router.delete("/:id(\\d+)", async (request, response, next) => {
+router.delete("/:id(\\d+)", checkAuthorization, async (request, response, next) => {
     const phoneId = Number(request.params.id);
 
     try {
@@ -83,6 +84,7 @@ router.delete("/:id(\\d+)", async (request, response, next) => {
 });
 
 router.post("/:id(\\d+)/photo",
+    checkAuthorization,
     upload.single("photo"),
     async (request, response, next) => {
 
