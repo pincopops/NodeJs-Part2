@@ -19,6 +19,7 @@ router.get("/", async (request, response) => {
     const iphones = await prisma.phones.findMany();
 
     response.json(iphones);
+    
 });
 
 router.get("/:id(\\d+)", async (request, response, next) => {
