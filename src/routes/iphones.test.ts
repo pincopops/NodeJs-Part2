@@ -33,7 +33,8 @@ describe("GET /iphones", () => {
             .get("/iphones")
             .expect(200)
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(phones);
     });
@@ -113,7 +114,8 @@ describe("POST /iphones", () => {
             })
             .expect(201)
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
 
         expect(response.body).toEqual(phone);
@@ -169,7 +171,8 @@ describe("PUT /iphones/:id", () => {
             })
             .expect(200)
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(phone);
     });
@@ -238,7 +241,8 @@ describe("DELETE /iphone/:id", () => {
         const response = await request
             .delete("/iphones/1")
             .expect(204)
-            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.text).toEqual("");
     });
@@ -275,7 +279,8 @@ describe("POST /iphones/:id/photo", () => {
             .post("/iphones/23/photo")
             .attach("photo", "test-fixtures/photos/file.png")
             .expect(201)
-            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
     });
 
@@ -284,7 +289,8 @@ describe("POST /iphones/:id/photo", () => {
             .post("/iphones/23/photo")
             .attach("photo", "test-fixtures/photos/file.jpg")
             .expect(201)
-            .expect("Access-Control-Allow-Origin", "http://localhost/8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost/8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
     });
 

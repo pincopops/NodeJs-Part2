@@ -5,7 +5,7 @@ import {
     validate,
     iphonesSchema,
     IphonesData
-} from "../lib/prisma/validation";
+} from "../lib/prisma/middleware/validation";
 
 import { initMulterMiddleware } from "../lib/prisma/middleware/multer";
 
@@ -90,21 +90,21 @@ router.post("/:id(\\d+)/photo",
             response.status(400);
             return next("No photo file uploaded.");
         }
-        
+
         const phoneId = Number(request.params.id);
         const photoFileName = request.file.filename;
-        
-        try{
+
+        try {
             await prisma.phones.update({
                 where: { id: phoneId },
                 data: { photoFileName },
             });
-        } catch(error) {
+        } catch (error) {
             response.status(404)
             next(`Cannot POST /phones/${phoneId}/photo`)
         }
-        
-        
+
+
     });
 
 router.use("/photos", express.static("uploads"));

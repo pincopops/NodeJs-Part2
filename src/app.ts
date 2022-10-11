@@ -9,6 +9,7 @@ import { initSessionMiddleware } from "./lib/prisma/middleware/session";
 import passport from "passport";
 
 import iphonesRoute from "./routes/iphones";
+import authRoutes from "./routes/auth";
 
 
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(initCorsMiddleware());
 
 app.use("/iphones", iphonesRoute);
+app.use("/auth", authRoutes);
 
 app.use(validationErrorMiddleware);
 
